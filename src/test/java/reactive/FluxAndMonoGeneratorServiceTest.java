@@ -154,4 +154,179 @@ class FluxAndMonoGeneratorServiceTest {
             .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
             .verifyComplete();
     }
+
+    @Test
+    void namesFluxTransformDefaultIfEmpty() {
+        //given
+
+        int stringLength=6;
+        //when
+        var namesFlux = fluxAndMonoGeneratorService.namesFluxTransform(stringLength);
+
+        //then
+        StepVerifier.create(namesFlux)
+            //.expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
+            .expectNext("default")
+            .verifyComplete();
+    }
+
+    @Test
+    void namesFluxTransformSwitchIfEmpty() {
+        //given
+
+        int stringLength=6;
+        //when
+        var namesFlux = fluxAndMonoGeneratorService.namesFluxTransformSwitchIfEmpty(stringLength);
+
+        //then
+        StepVerifier.create(namesFlux)
+            //.expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
+            .expectNext("D","E","F","A","U","L","T")
+            .verifyComplete();
+    }
+
+    @Test
+    void exploreConcat() {
+
+        //given
+
+        //when
+        var exploreConcat=fluxAndMonoGeneratorService.exploreConcat();
+        //then
+        StepVerifier.create(exploreConcat)
+            .expectNext("A","B","C","D","E","F")
+            .verifyComplete();
+
+    }
+
+    @Test
+    void exploreFLuxConcatWith() {
+        //given
+
+        //when
+        var fluxConcatWith=fluxAndMonoGeneratorService.exploreFLuxConcatWith();
+
+        //then
+        StepVerifier.create(fluxConcatWith)
+            .expectNext("A","B","C","D","E","F")
+            .verifyComplete();
+    }
+
+    @Test
+    void exploreMonoConcatWith() {
+        //given
+
+        //when
+        var monoConcatWith=fluxAndMonoGeneratorService.exploreMonoConcatWith();
+
+        //then
+        StepVerifier.create(monoConcatWith)
+            .expectNext("A","B")
+            .verifyComplete();
+
+    }
+
+    @Test
+    void exploreMerge() {
+        //given
+
+        //when
+        var exploreMerge=fluxAndMonoGeneratorService.exploreMerge();
+
+        //then
+        StepVerifier.create(exploreMerge)
+            .expectNext("A","D","B","E","C","F")
+            .verifyComplete();
+    }
+
+    @Test
+    void exploreMergeWith() {
+        //given
+
+        //when
+        var exploreMerge=fluxAndMonoGeneratorService.exploreMergeWith();
+
+        //then
+        StepVerifier.create(exploreMerge)
+            .expectNext("A","D","B","E","C","F")
+            .verifyComplete();
+    }
+
+    @Test
+    void exploreMergeWithMono() {
+
+        //when
+        var exploreMerge=fluxAndMonoGeneratorService.exploreMergeWithMono();
+
+        //then
+        StepVerifier.create(exploreMerge)
+            .expectNext("A","B")
+            .verifyComplete();
+    }
+
+    @Test
+    void exploreMergeSequential() {
+        //given
+
+        //when
+        var exploreMerge=fluxAndMonoGeneratorService.exploreMergeSequential();
+
+        //then
+        StepVerifier.create(exploreMerge)
+            .expectNext("A","B","C","D","E","F")
+            .verifyComplete();
+    }
+
+    @Test
+    void exploreZip() {
+        //given
+
+        //when
+        var exploreMerge=fluxAndMonoGeneratorService.exploreZip();
+
+        //then
+        StepVerifier.create(exploreMerge)
+            .expectNext("AD","BE","CF")
+            .verifyComplete();
+    }
+
+    @Test
+    void exploreZip1() {
+
+        //given
+
+        //when
+        var exploreMerge=fluxAndMonoGeneratorService.exploreZip1();
+
+        //then
+        StepVerifier.create(exploreMerge)
+            .expectNext("AD14","BE25","CF36")
+            .verifyComplete();
+    }
+
+    @Test
+    void exploreZipWith() {
+        //given
+
+        //when
+        var exploreMerge=fluxAndMonoGeneratorService.exploreZipWith();
+
+        //then
+        StepVerifier.create(exploreMerge)
+            .expectNext("AD","BE","CF")
+            .verifyComplete();
+    }
+
+    @Test
+    void exploreZipWithMono() {
+        //given
+
+        //when
+        var exploreMerge=fluxAndMonoGeneratorService.exploreZipWithMono();
+
+        //then
+        StepVerifier.create(exploreMerge)
+            .expectNext("AB")
+            .verifyComplete();
+    }
 }
