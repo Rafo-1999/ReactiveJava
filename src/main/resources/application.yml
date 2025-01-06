@@ -1,9 +1,4 @@
-  spring:
-    data:
-    mongodb:
-    uri: mongodb://localhost:27017/moviesdb
----
-  spring:
+spring:
   profiles:
     active: local
 ---
