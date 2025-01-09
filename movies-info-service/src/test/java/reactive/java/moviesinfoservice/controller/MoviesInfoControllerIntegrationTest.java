@@ -128,4 +128,22 @@ class MoviesInfoControllerIntegrationTest {
             .isNoContent();
 
     }
+
+
+    @Test
+    void updateMovieInfoNotFound() {
+        var movieInfoId = "def";
+
+        var movieinfo= new MovieInfo("1", "The Dark Knight1", 2008, List.of("Christian Bale", "Heath Ledger"),
+                                     LocalDate.parse("2008-07-18"));
+
+        webTestClient
+            .put()
+            .uri(MOVIES_INFO_PATH + "/{id}", movieInfoId)
+            .bodyValue(movieinfo)
+            .exchange()
+            .expectStatus()
+            .isNotFound();
+
+    }
 }

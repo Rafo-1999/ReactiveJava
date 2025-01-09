@@ -3,7 +3,9 @@ package reactive.java.moviesinfoservice.domain;
 import java.time.LocalDate;
 import java.util.List;
 
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Document
 public class MovieInfo {
+
+
+    @Id
+    private String movieInfoId;
+    @NotBlank(message="movieInfo.name must be present")
+    private String name;
+    @NotNull()
+    @Positive(message = "movieInfo.name must be positive value")
+    private Integer year;
+
+    private List<@NotBlank (message = "movieInfo.cast must be present") String> cast;
+    private LocalDate release_date;
+
+    public MovieInfo(String movieInfoId, String name, Integer year, List<String> cast, LocalDate release_date) {
+        this.movieInfoId = movieInfoId;
+        this.name = name;
+        this.year = year;
+        this.cast = cast;
+        this.release_date = release_date;
+    }
 
     public String getMovieInfoId() {
         return movieInfoId;
@@ -54,20 +76,4 @@ public class MovieInfo {
     public void setRelease_date(LocalDate release_date) {
         this.release_date = release_date;
     }
-
-    @Id
-    private String movieInfoId;
-    private String name;
-    private Integer year;
-    private List<String> cast;
-    private LocalDate release_date;
-
-    public MovieInfo(String movieInfoId, String name, Integer year, List<String> cast, LocalDate release_date) {
-        this.movieInfoId = movieInfoId;
-        this.name = name;
-        this.year = year;
-        this.cast = cast;
-        this.release_date = release_date;
-    }
-
 }

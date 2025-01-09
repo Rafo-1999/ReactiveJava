@@ -1,6 +1,8 @@
 package reactive.java.moviesinfoservice.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,15 +40,18 @@ public class MoviesInfoController {
 
   @PostMapping("/movieinfos")
   @ResponseStatus(HttpStatus.CREATED)
-  public Mono<MovieInfo> addMovieInfo(@RequestBody MovieInfo movieInfo) {
+  public Mono<MovieInfo> addMovieInfo(@RequestBody @Valid MovieInfo movieInfo) {
     System.out.println("Received a request to add movie info");
 
     return moviesInfoService.addMovieInfo(movieInfo).log();
   }
 
   @PutMapping("/movieinfos/{id}")
-  public Mono<MovieInfo> updateMovieInfo(@RequestBody MovieInfo updatedMovieInfo, @PathVariable String id) {
-    return  moviesInfoService.updateMovieInfo(updatedMovieInfo,id);
+  public Mono<ResponseEntity<MovieInfo>> updateMovieInfo(@RequestBody MovieInfo updatedMovieInfo, @PathVariable String id) {
+    return  moviesInfoService.updateMovieInfo(updatedMovieInfo,id)
+        .map(ResponseEntity.ok()::body)
+        .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()))
+        .log();
   }
 
   @DeleteMapping("/movieinfos/{id}")

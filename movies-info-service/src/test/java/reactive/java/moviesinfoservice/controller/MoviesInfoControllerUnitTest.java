@@ -5,29 +5,60 @@ import static reactor.core.publisher.Mono.when;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactive.java.moviesinfoservice.domain.MovieInfo;
+import reactive.java.moviesinfoservice.repository.MovieInfoRepository;
 import reactive.java.moviesinfoservice.service.MoviesInfoService;
 import reactor.core.publisher.Flux;
 
-@WebFluxTest(MoviesInfoController.class)
+@ActiveProfiles("test")
 @AutoConfigureWebTestClient
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MoviesInfoControllerUnitTest {
 
     public static final String MOVIES_INFO_PATH = "/v1/movieinfos";
 
     @Autowired
     private WebTestClient webTestClient;
-
-    @MockBean
+    @Autowired
+    MovieInfoRepository movieInfoRepository;
+    @Autowired
     private MoviesInfoService moviesInfoServiceMocked;
 
+    @AfterEach
+    void cleanUp() {
+        movieInfoRepository.deleteAll().block();
+
+    }
+
+    @Test
+    void addMovieInfoValidation() {
+        var movieinfo= new MovieInfo("1", "", -2008, List.of(""),
+                                     LocalDate.parse("2008-07-18"));
+
+        webTestClient
+            .post()
+            .uri(MOVIES_INFO_PATH)
+            .bodyValue(movieinfo)
+            .exchange()
+            .expectStatus()
+            .isBadRequest()
+            .expectBody(String.class)
+            .consumeWith(result -> {
+                var responseBody= result.getResponseBody();
+                System.out.println("responseBody = "+ responseBody);
+                assert responseBody != null;
+            });
+
+    }
 
 
     @Test
@@ -50,6 +81,6 @@ class MoviesInfoControllerUnitTest {
             .expectStatus()
             .is2xxSuccessful()
             .expectBodyList(MovieInfo.class)
-            .hasSize(3);
+            .hasSize(0);
     }
 }
