@@ -13,8 +13,10 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactive.java.moviesinfoservice.domain.MovieInfo;
 import reactive.java.moviesinfoservice.repository.MovieInfoRepository;
+import reactor.test.StepVerifier;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -146,4 +148,33 @@ class MoviesInfoControllerIntegrationTest {
             .isNotFound();
 
     }
+
+    @Test
+    void findByYear(){
+
+        var movieInfoFlux=movieInfoRepository.findByYear(2010).log();
+
+        StepVerifier.create(movieInfoFlux)
+            .expectNextCount(1)
+            .verifyComplete();
+    }
+
+    @Test
+    void getAllMovieInfoByYear() {
+
+        var uri = UriComponentsBuilder.fromUriString(MOVIES_INFO_PATH)
+            .queryParam("year", "2010")
+                .buildAndExpand()
+                    .toUri();
+        webTestClient
+            .get()
+            .uri(uri)
+            .exchange()
+            .expectStatus()
+            .is2xxSuccessful()
+            .expectBodyList(MovieInfo.class)
+            .hasSize(1);
+    }
+
+
 }

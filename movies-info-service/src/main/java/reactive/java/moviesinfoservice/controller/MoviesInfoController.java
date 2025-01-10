@@ -1,6 +1,8 @@
 package reactive.java.moviesinfoservice.controller;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactive.java.moviesinfoservice.domain.MovieInfo;
+import reactive.java.moviesinfoservice.exceptionHandler.GlobalErrorHandler;
 import reactive.java.moviesinfoservice.service.MoviesInfoService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,14 +25,21 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/v1")
 public class MoviesInfoController {
 
-  private MoviesInfoService moviesInfoService;
+  private final MoviesInfoService moviesInfoService;
+  private static final Logger log = LoggerFactory.getLogger(MoviesInfoController.class);
 
   public MoviesInfoController(MoviesInfoService moviesInfoService) {
     this.moviesInfoService = moviesInfoService;
   }
 
   @GetMapping("/movieinfos")
-  public Flux<MovieInfo> getAllMovieInfos() {
+  public Flux<MovieInfo> getAllMovieInfos(@RequestParam(value = "year",required = false)Integer year) {
+    log.info("Year is {}", year);
+
+    if (year != null) {
+      return moviesInfoService.getMovieInfoByYear(year);
+    }
+
     return  moviesInfoService.getAllMovieInfos().log();
   }
 
