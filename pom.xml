@@ -117,4 +117,8 @@
 		</plugins>
 	</build>
 
+
+	<modules>
+		<module>movies-review-service</module>
+	</modules>
 </project>
