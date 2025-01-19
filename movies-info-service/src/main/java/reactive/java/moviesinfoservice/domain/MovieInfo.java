@@ -6,14 +6,9 @@ import java.util.List;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@NoArgsConstructor
 @Document
 public class MovieInfo {
 
@@ -35,6 +30,9 @@ public class MovieInfo {
         this.year = year;
         this.cast = cast;
         this.release_date = release_date;
+    }
+
+    public MovieInfo() {
     }
 
     public String getMovieInfoId() {

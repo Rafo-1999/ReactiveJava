@@ -3,20 +3,12 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for movies-review-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
-        </processorPath>
-        <module name="movies-review-service" />
-      </profile>
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="movies-review-service" />
+        <module name="movies-service" />
       </profile>
       <profile name="Annotation profile for demo" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -29,7 +21,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="23">
-      <module name="movies-service" target="21" />
+      <module name="demo" target="23" />
+      <module name="movies-service (1)" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -38,6 +31,8 @@
       <module name="movies-info-service" options="-parameters" />
       <module name="movies-review-service" options="-parameters" />
       <module name="movies-service" options="-parameters" />
+      <module name="movies-service (1)" options="-parameters" />
+      <module name="reactive" options="-parameters" />
     </option>
   </component>
 </project>

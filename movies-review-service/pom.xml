@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>Reactive.Java</groupId>
-        <artifactId>demo</artifactId>
+        <artifactId>reactive</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath> <!-- Relative path to the parent POM -->
     </parent>
