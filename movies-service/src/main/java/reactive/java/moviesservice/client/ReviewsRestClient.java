@@ -13,6 +13,7 @@ import reactive.java.moviesservice.exception.MoviesInfoClientException;
 import reactive.java.moviesservice.exception.MoviesInfoServerException;
 import reactive.java.moviesservice.exception.ReviewsClientException;
 import reactive.java.moviesservice.exception.ReviewsServerException;
+import reactive.java.moviesservice.util.RetryUtil;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -61,7 +62,8 @@ public class ReviewsRestClient {
                   "Server Exception in ReviewService"+responseMessage
               )));
         })
-        .bodyToFlux(Review.class);
+        .bodyToFlux(Review.class)
+        .retryWhen(RetryUtil.retrySpec());
 
   }
 }

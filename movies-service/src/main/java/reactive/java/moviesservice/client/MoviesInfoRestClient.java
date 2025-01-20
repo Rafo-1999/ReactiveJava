@@ -1,5 +1,6 @@
 package reactive.java.moviesservice.client;
 
+import java.time.Duration;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactive.java.moviesservice.domain.MovieInfo;
 import reactive.java.moviesservice.exception.MoviesInfoClientException;
 import reactive.java.moviesservice.exception.MoviesInfoServerException;
+import reactive.java.moviesservice.util.RetryUtil;
+import reactor.core.Exceptions;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 @Component
 public class MoviesInfoRestClient {
@@ -27,6 +31,7 @@ public class MoviesInfoRestClient {
 
   public Mono<MovieInfo> retrieveMovieInfo(String movieId) {
     var url = moviesInfoUrl.concat("/{id}");
+
 
     return webClient
         .get()
@@ -56,7 +61,8 @@ public class MoviesInfoRestClient {
               )));
         })
         .bodyToMono(MovieInfo.class)
-        .retry(3)
+        //.retry(3)
+        .retryWhen(RetryUtil.retrySpec())
         .log();
   }
 

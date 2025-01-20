@@ -7,6 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="movies-review-service (1)" />
         <module name="movies-review-service" />
         <module name="movies-service" />
       </profile>
@@ -21,7 +22,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="23">
-      <module name="demo" target="23" />
       <module name="movies-service (1)" target="17" />
     </bytecodeTargetLevel>
   </component>
@@ -30,6 +30,7 @@
       <module name="demo" options="-parameters" />
       <module name="movies-info-service" options="-parameters" />
       <module name="movies-review-service" options="-parameters" />
+      <module name="movies-review-service (1)" options="-parameters" />
       <module name="movies-service" options="-parameters" />
       <module name="movies-service (1)" options="-parameters" />
       <module name="reactive" options="-parameters" />
