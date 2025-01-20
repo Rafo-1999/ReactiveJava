@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactive.java.moviesinfoservice.domain.MovieInfo;
-import reactive.java.moviesinfoservice.exceptionHandler.GlobalErrorHandler;
 import reactive.java.moviesinfoservice.service.MoviesInfoService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 
 @RestController
 @RequestMapping("/v1")
@@ -27,6 +28,8 @@ public class MoviesInfoController {
 
   private final MoviesInfoService moviesInfoService;
   private static final Logger log = LoggerFactory.getLogger(MoviesInfoController.class);
+
+  Sinks.Many<MovieInfo> moviesInfoSink=Sinks.many().replay().all();
 
   public MoviesInfoController(MoviesInfoService moviesInfoService) {
     this.moviesInfoService = moviesInfoService;
@@ -47,6 +50,10 @@ public class MoviesInfoController {
   public Mono<MovieInfo> getAllMovieInfosById(@PathVariable String id) {
     return  moviesInfoService.getAllMovieInfosById(id);
   }
+  @GetMapping(value = "/movieinfos/stream",produces = MediaType.APPLICATION_NDJSON_VALUE)
+  public Flux<MovieInfo> getMovieInfoById() {
+    return moviesInfoSink.asFlux();
+  }
 
 
   @PostMapping("/movieinfos")
@@ -54,8 +61,11 @@ public class MoviesInfoController {
   public Mono<MovieInfo> addMovieInfo(@RequestBody @Valid MovieInfo movieInfo) {
     System.out.println("Received a request to add movie info");
 
-    return moviesInfoService.addMovieInfo(movieInfo).log();
+    return moviesInfoService.addMovieInfo(movieInfo)
+        .doOnNext(savedInfo->moviesInfoSink.tryEmitNext(savedInfo));
   }
+
+
 
   @PutMapping("/movieinfos/{id}")
   public Mono<ResponseEntity<MovieInfo>> updateMovieInfo(@RequestBody MovieInfo updatedMovieInfo, @PathVariable String id) {

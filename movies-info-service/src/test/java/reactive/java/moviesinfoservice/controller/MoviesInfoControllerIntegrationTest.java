@@ -84,6 +84,43 @@ class MoviesInfoControllerIntegrationTest {
     }
 
     @Test
+    void getAllMovieInfos_stream() {
+        var movieinfo= new MovieInfo("1", "The Dark", 2008, List.of("Christian Bale", "Heath Ledger"),
+            LocalDate.parse("2008-07-18"));
+
+        webTestClient
+            .post()
+            .uri(MOVIES_INFO_PATH)
+            .bodyValue(movieinfo)
+            .exchange()
+            .expectStatus()
+            .isCreated()
+            .expectBody(MovieInfo.class)
+            .consumeWith(result -> {
+                var savedMovieInfo=result.getResponseBody();
+                assert savedMovieInfo != null;
+                assert savedMovieInfo.getMovieInfoId()!=null;
+            });
+
+       var moviesStreamFlux= webTestClient
+            .get()
+            .uri(MOVIES_INFO_PATH+"/stream")
+            .exchange()
+            .expectStatus()
+            .is2xxSuccessful()
+            .returnResult(MovieInfo.class)
+                .getResponseBody();
+
+       StepVerifier.create(moviesStreamFlux)
+           .assertNext(movieInfo -> {
+               assert movieInfo.getMovieInfoId()!=null;
+           })
+           .thenCancel()
+           .verify();
+
+    }
+
+    @Test
     void getAllMovieInfosById() {
         var movieInfoId = "abc";
         webTestClient
